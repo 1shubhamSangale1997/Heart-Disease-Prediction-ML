@@ -1,151 +1,205 @@
-<!-- This is GUI for Heart disease Detection Application Using Machine Learning Classifer -->
-
 <!DOCTYPE html>
-<html >
+<html>
 <head>
-  <meta charset="UTF-8">
-  <title>ML API</title>
+    <title>Heart Disease Predictor</title>
 
-  <style>
-    /* CSS code for button */
-    body {
-      background-image: url('static/images/project.jpg');
-      background-repeat: no-repeat;
-      background-attachment: fixed;
-      background-size: cover;
-    }
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 
-    /* CSS code for button */
-    .button_css {
-    color: #494949 !important;
-    text-transform: uppercase;
-    text-decoration: none;
-    background: #ffffff;
-    padding: 20px;
-    border: 4px solid #494949 !important;
-    display: inline-block;
-    transition: all 0.4s ease 0s;
-    }
-    
-    .button_css:hover {
-    color: #ffffff !important;
-    background: #f6b93b;
-    border-color: #f6b93b !important;
-    transition: all 0.4s ease 0s;
-    }
-  </style>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: url("{{ url_for('static', filename='images/project.JPG') }}") no-repeat center center fixed;
+            background-size: cover;
+            font-family: 'Segoe UI', sans-serif;
+        }
 
+        /* Full transparent overlay */
+        .main-container {
+            min-height: 100vh;
+            padding: 50px;
+            backdrop-filter: blur(8px);
+            background: rgba(0, 0, 0, 0.45);
+        }
+
+        /* Glass card effect */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 20px;
+            padding: 30px;
+            backdrop-filter: blur(15px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            color: white;
+        }
+
+        h2 {
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        label {
+            font-weight: 500;
+        }
+
+        .form-control,
+        .form-select {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+        }
+
+        .form-control::placeholder {
+            color: #ddd;
+        }
+
+        .form-control:focus,
+        .form-select:focus {
+            background: rgba(255, 255, 255, 0.3);
+            color: white;
+            box-shadow: none;
+        }
+
+        .btn-danger {
+            border-radius: 30px;
+            padding: 10px 40px;
+            font-weight: bold;
+        }
+
+        .result-box {
+            margin-top: 20px;
+            font-size: 20px;
+            text-align: center;
+            font-weight: bold;
+        }
+    </style>
 </head>
 
 <body>
 
- 
- 
- <div class="login">
-	
-    <!-- Get input for predict the  heart disease -->
-    <center>
-         <br>
-            <br>
-               <br>
-                  <br>
-    <form action="{{ url_for('predict')}}"method="post">
-       
-          <br>
-            <br>
-              <br>
-                <br>
-                  <br>
-                    <br>
-                      <br>
-                        <br>
-                          <br>
-                           <br>
-                            <br>
-                             <br>
-                              <br>
-                               <br>
-                                <br>
-                                 <br>
-                                  <br>
-                                   <br>
-                                    <br>
-                                     <br>
-                                      <br>
-                                        <br>
-                                        
-                                    
+<div class="main-container">
+    <div class="container">
+        <div class="glass-card">
 
-        <h1>Enter the value of heart features >>></h1>
-        
-    	<input type="text" name="age" placeholder="age" required="required" />
-        <input type="text" name="trestbps" placeholder="trestbps" required="required" />
-		<input type="text" name="chol" placeholder="chol" required="required" />
-        <input type="text" name="thalach" placeholder="thalach" required="required" />
-            <input type="text" name="oldpeak" placeholder="oldpeak" required="required" />
-		
-        
+            <h2>❤️ Heart Disease Prediction</h2>
 
-		<br>
-    	<input type="text" name="sex_0" placeholder="sex_0" required="required" />
-        <input type="text" name="sex_1" placeholder="sex_1" required="required" />
-		<input type="text" name="cp_0" placeholder="cp_0" required="required" />
-        <input type="text" name=" cp_1" placeholder=" cp_1" required="required" />
-            <input type="text" name="cp_2" placeholder="cp_2" required="required" />
-    	
-        
-		
-		<br>
-    	<input type="text" name="cp_3" placeholder=" cp_3" required="required" />
-        <input type="text" name="fbs_0" placeholder="fbs_0" required="required" />
-		<input type="text" name="restecg_0" placeholder="restecg_0" required="required" />
-        <input type="text" name="restecg_1" placeholder="restecg_1" required="required" />
-            <input type="text" name="restecg_2" placeholder="restecg_2" required="required" />
-    	
-        
-		
-    	<br>
-    	<input type="text" name="exang_0" placeholder="exang_0" required="required" />
-        <input type="text" name="exang_1" placeholder="exang_1" required="required" />
-		<input type="text" name=" slope_0" placeholder=" slope_0" required="required" />
-        <input type="text" name=" slope_1" placeholder="slope_1" required="required" />
-    <input type="text" name="  slope_2" placeholder=" slope_2" required="required" />
-    	
-        
-			<br>
+            <form action="/predict" method="post">
 
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label>Age</label>
+                        <input type="number" name="age" class="form-control" required>
+                    </div>
 
-      
-      <input type="text" name=" ca_0" placeholder=" ca_0" required="required" />
-        <input type="text" name="ca_1" placeholder="ca_1" required="required" />
-    <input type="text" name="ca_2" placeholder="ca_2" required="required" />
-        <input type="text" name=" thal_1" placeholder="thal_1" required="required" />
-    <input type="text" name="thal_2" placeholder="thal_2" required="required" />
-      
-        
-      <br>
-      <input type="text" name="thal_3" placeholder="thal_3" required="required" />
-      <br>
+                    <div class="col-md-6 mb-3">
+                        <label>Resting Blood Pressure</label>
+                        <input type="number" name="trestbps" class="form-control" required>
+                    </div>
+                </div>
 
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label>Cholesterol</label>
+                        <input type="number" name="chol" class="form-control" required>
+                    </div>
 
-      
-        
-        <!-- Show button -->
-        <div class="button_cont" align="center"><a class="button_css" href="https://github.com/Nikirtane" target="_blank" rel="nofollow noopener">
-            <button type="submit" class="btn btn-primary btn-block btn-large"><strong>Predict Heart disease</strong></button></a>
+                    <div class="col-md-6 mb-3">
+                        <label>Maximum Heart Rate</label>
+                        <input type="number" name="thalach" class="form-control" required>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label>ST Depression (Oldpeak)</label>
+                    <input type="number" step="0.1" name="oldpeak" class="form-control" required>
+                </div>
+
+                <div class="mb-3">
+                    <label>Gender</label>
+                    <select name="sex" class="form-select">
+                        <option value="0">Female</option>
+                        <option value="1">Male</option>
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label>Chest Pain Type</label>
+                    <select name="cp" class="form-select">
+                        <option value="0">Typical Angina</option>
+                        <option value="1">Atypical Angina</option>
+                        <option value="2">Non-anginal Pain</option>
+                        <option value="3">Asymptomatic</option>
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label>Fasting Blood Sugar > 120 mg/dl?</label>
+                    <select name="fbs" class="form-select">
+                        <option value="0">No</option>
+                        <option value="1">Yes</option>
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label>Rest ECG</label>
+                    <select name="restecg" class="form-select">
+                        <option value="0">Normal</option>
+                        <option value="1">ST-T Abnormality</option>
+                        <option value="2">Left Ventricular Hypertrophy</option>
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label>Exercise Induced Angina</label>
+                    <select name="exang" class="form-select">
+                        <option value="0">No</option>
+                        <option value="1">Yes</option>
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label>Slope</label>
+                    <select name="slope" class="form-select">
+                        <option value="0">Upsloping</option>
+                        <option value="1">Flat</option>
+                        <option value="2">Downsloping</option>
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label>Number of Major Vessels (CA)</label>
+                    <select name="ca" class="form-select">
+                        <option value="0">0</option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label>Thal</label>
+                    <select name="thal" class="form-select">
+                        <option value="1">Normal</option>
+                        <option value="2">Fixed Defect</option>
+                        <option value="3">Reversible Defect</option>
+                    </select>
+                </div>
+
+                <div class="text-center">
+                    <button type="submit" class="btn btn-danger">Predict</button>
+                </div>
+
+            </form>
+
+            {% if prediction_text %}
+                <div class="result-box">
+                    {{ prediction_text }}
+                </div>
+            {% endif %}
+
         </div>
-        
-    </form>
-    </center>
-   
-   <!-- Show predicted output using ML model --> 
-   <div>
-       <center>
-   <h1>{{ prediction_text }}</h1>
-       </center>
-   </div>
-
- </div>
+    </div>
+</div>
 
 </body>
 </html>

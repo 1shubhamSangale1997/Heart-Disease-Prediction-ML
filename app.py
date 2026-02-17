@@ -1,36 +1,57 @@
-import numpy as np
-import pandas as pd
 from flask import Flask, request, render_template
 import pickle
+import numpy as np
 
 app = Flask(__name__)
-model = pickle.load(open('model.pkl', 'rb'))
+
+# Load trained model
+with open("model.pkl", "rb") as f:
+    model = pickle.load(f)
+
 
 @app.route('/')
 def home():
     return render_template('index.html')
 
-@app.route('/predict',methods=['POST'])
-def predict():
-    input_features = [float(x) for x in request.form.values()]
-    features_value = [np.array(input_features)]
-    
-    features_name = [ "age", "trestbps","chol","thalach", "oldpeak", "sex_0",
-                       "  sex_1", "cp_0", "cp_1", "cp_2", "cp_3","  fbs_0",
-                        "restecg_0","restecg_1","restecg_2","exang_0","exang_1",
-                        "slope_0","slope_1","slope_2","ca_0","ca_1","ca_2","thal_1",
-                        "thal_2","thal_3"]
-    
-    df = pd.DataFrame(features_value, columns=features_name)
-    output = model.predict(df)
-        
-    if output == 1:
-        res_val = "** heart disease **"
-    else:
-        res_val = "no heart disease "
-        
 
-    return render_template('index.html', prediction_text='Patient has {}'.format(res_val))
+@app.route('/predict', methods=['POST'])
+def predict():
+    try:
+        # Feature order MUST match training dataset
+        features = [
+            float(request.form['age']),        # age
+            int(request.form['sex']),          # sex
+            int(request.form['cp']),           # chest pain
+            float(request.form['trestbps']),   # resting BP
+            float(request.form['chol']),       # cholesterol
+            int(request.form['fbs']),          # fasting blood sugar
+            int(request.form['restecg']),      # rest ECG
+            float(request.form['thalach']),    # max heart rate
+            int(request.form['exang']),        # exercise angina
+            float(request.form['oldpeak']),    # ST depression
+            int(request.form['slope']),        # slope
+            int(request.form['ca']),           # major vessels
+            int(request.form['thal'])          # thal
+        ]
+
+        # Convert to numpy array
+        final_input = np.array([features])
+
+        # Prediction
+        prediction = model.predict(final_input)[0]
+        probability = model.predict_proba(final_input)[0][1]*100
+
+        # Result formatting
+        if prediction == 1:
+            result = f"⚠ High Risk of Heart Disease ({probability:.2f}% confidence)"
+        else:
+            result = f"✅ Low Risk of Heart Disease ({100 - probability:.2f}% confidence)"
+
+        return render_template('index.html', prediction_text=result)
+
+    except Exception as e:
+        return render_template('index.html', prediction_text=f"Error: {str(e)}")
+
 
 if __name__ == "__main__":
-    app.run()
+    app.run(debug=True)
